@@ -1,0 +1,635 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <title>Evaluation of Left Ventricular Diastolic Function by Echocardiography</title>
+
+    <style>
+        
+        .card-select {
+        text-align: center;
+        transition: all 0.5s ease;
+        background-color: #17a2b8
+        }
+
+        .card-select .card-divider {
+        background-color: #fefefe;
+        letter-spacing: 1px;
+        font-weight: 500;
+        text-transform: uppercase;
+        border: 1px solid #cacaca;
+        }
+
+        .card-select .button {
+        padding: 1rem;
+        background-color: #cacaca;
+        }
+
+        .card-select .button:after {
+        content: 'Select';
+        }
+
+        .card-select .button:hover {
+        background-color: #1779ba;
+        }
+
+        .card-select .button:focus {
+        /* background-color: #1779ba; */
+        }
+
+        .card-select.is-selected {
+            border: 1px solid #22b522;
+            box-shadow: 0 0 10px #e6e6e6;
+            background-color: #22b522;
+            transition: all 0.5s ease;
+        }
+
+        .card-select.is-selected .button {
+        background-color: #3be83b;
+        }
+
+        .card-select.is-selected .button:after {
+        content: 'Selected';
+        }
+
+        body {
+            background-color: #0e2e47;
+        }
+
+        ul {
+            padding: 10px;
+            text-align: left;
+        }
+                
+    </style>
+  </head>
+  <body>
+    <div class="loading"></div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 aling-center">
+                <center>
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Evaluation of Left Ventricular Diastolic Function by Echocardiography</h4>
+                        <!-- <hr> <p class="mb-0">(in patients with normal left ventricular ejection fraction)</p>-->
+                    </div>  
+                </center>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="back-button">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h6 class="title text-white"></h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="cards text-white"></div>
+            </div>
+        </div>
+        <div class="row mt-3 formCalculate" style="display: none;">
+            <div class="col-md-12 text-white">
+                <form action="#">
+                    <div class="form-group row justify-content-center">
+                        <label for="weight" class="col-md-2 col-form-label">Weight (kg):</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="weight" placeholder="0,00">
+                        </div>
+                    </div>
+                    <div class="form-group row justify-content-center">
+                        <label for="height" class="col-md-2 col-form-label">Height (cm):</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="height" placeholder="0,00">
+                        </div>
+                    </div>
+                    <div class="form-group row justify-content-center">
+                        <label for="laVolume" class="col-md-2 col-form-label">LA volume (mL):</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="laVolume" placeholder="0,00">
+                        </div>
+                    </div>
+                    <div class="form-group pt-3 row justify-content-center">
+                        <button type="button" id="calculate" class="btn btn-primary">Calculate</button>
+                        <span id="resultLAVol" class="m-2"></span>
+                    </div>
+                    <div class="form-group row justify-content-center">
+                        <button type="button" id="nextButton" class="btn btn-success" style="display: none;">Next</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script>
+        
+        let steps = {
+            "First": {
+                "options": {
+                    "2009 Guideline <br> (ASE)": "FORM_NEXT",
+                    "2016 Guideline <br> (ASE / EACVI)": "FORM"
+                }
+            },
+            //2009 guide
+            "A1": {
+                "title": "(choose one option)",
+                "options": {
+                    "LA volume index < 34 mL/m² <br> septal e' ≥ 8 or lateral e' ≥ 10": "A2",
+                    "LA volume index ≥ 34 mL/m² <br> septal e' ≥ 8 or lateral e' ≥ 10": "A3",
+                    "LA volume index ≥ 34 mL/m² <br> septal e' < 8 or lateral e' < 10": "A4"
+                }
+            },
+            "A2": "Normal Diastolic Function",
+            "A3": "<ul> <li>Normal Diastolic Function</li><li>Athlete's Heart</li><li>Constriction</li> </ul>",
+            "A4": {
+                "title": "(choose one option)",
+                "options": {
+                    "E/A < 0,8 <br> DT > 200 ms <br> Average E/e' ≤ 8 <br> Ar-A < 0 ms <br> Valsalva: E/A decrease < 0,5": "A5",
+                    "E/A 0,8 - 1,5 <br> DT 160 -  200 ms <br> Average E/e' 9 - 12 <br> Ar-A ≥ 30 ms <br> Valsalva: E/A decrease ≥ 0,5": "A6",
+                    "E/A ≥ 2 <br> DT < 160 ms <br> Ar-A ≥ 30 ms <br> Valsalva: E/A decrease ≥ 0,5 <br>  <br> Average E/e' ≥ 13 or <br> Septal E/e' ≥ 15 or <br> Lateral E/e' > 12": "A7"
+                }
+            },
+            "A5": "Grade I Diastolic Dysfunction <br> (mild)",
+            "A6": "Grade II Diastolic Dysfunction <br> (moderate)",
+            "A7": "Grade III Diastolic Dysfunction <br> (severe)",
+            //2016 guide
+            "B1": {
+                "select": true,
+                "title": "(choose all applicable options)",
+                "options": [
+                    "Average E/e' > 14",
+                    "Septal e' < 7 cm/s <br> and / or <br> Lateral e' < 10 cm/s",
+                    "TR > 2,8 cm/s",
+                    "LA volume index > 34 mL/m²",
+                ],
+                "none": function(){
+                    changeCards("B2")
+                    return
+                },
+                "next": function(){
+                    let selected = countSelected()
+
+                    if (selected == 1){
+                        changeCards("B2")
+                    }else if (selected == 2){
+                        changeCards("B3")
+                    }else{
+                        changeCards("B5")
+                    }
+                    return
+                }
+            },
+            "B2": "<span class=\"mb-3\">Normal Diastolic Function</span> <br>\
+                    <div class=\"row\">\
+                        <div class=\"col-md-2\" style=\"text-align: left;margin-top: 25px;\">\
+                            <span style=\"font-size:0.9rem; text-aling:left\">Possible situations: </span>\
+                        </div>\
+                    </div>\
+                    <div class=\"card text-white bg-info mt-2 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
+                        <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
+                            <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
+                                <ul>\
+                                    <li>Reducted Septal e' with Normal Diastolic Function</li>\
+                                    <ul>\
+                                        <li>Wrong local sample volume</li>\
+                                        <li>Dehydration</li>\
+                                        <li>Left bundle branch block</li>\
+                                        <li>Pulmonary hypertension with right ventricular diastolic dysfunction</li>\
+                                    </ul>\
+                                </ul>\
+                            </span>\
+                        </div>\
+                    </div>\
+                    <div class=\"card text-white bg-info mt-3 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
+                        <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
+                            <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
+                                <ul>\
+                                    <li>Increased LA volume index with Normal Diastolic Function</li>\
+                                    <ul>\
+                                        <li>Anemia</li>\
+                                        <li>Bradycardia</li>\
+                                        <li>Frequent arrhythmias</li>\
+                                        <li>Mitral valve injuries</li>\
+                                        <li>Intense physical activity</li>\
+                                    </ul>\
+                                </ul>\
+                            </span>\
+                        </div>\
+                    </div>",
+            "B3": {
+                "select": true,
+                "title": "(choose all applicable options)",
+                "options": [
+                    "Valsalva: E/A decrease > 50%",
+                    "L Wave > 20 cm/s",
+                    "Ar - A > 30 ms",
+                    "IVRT < 70 ms",
+                ],
+                "none": function(){
+                    changeCards("B11")
+                    return
+                }, 
+                "next": function(){
+                    let selected = countSelected()
+
+                    if (selected > 0){
+                        changeCards("B5")
+                        return
+                    }
+
+                    changeCards("B11")
+                    return
+                }
+            },
+            "B4": "Indeterminate",
+            "B5": {
+                "title": "(choose one option)",
+                "options": {
+                    "E/A ≤ 0,8 <br> and <br> E ≤ 50 cm/s": "B6",
+                    "E/A 0,8 - 2 <br> or <br> E/A ≤ 0,8 and E ≥ 50 cm/s": "B7-1",
+                    "E/A ≥ 2": "B8"
+                }
+            },
+            "B6": "Grade I Diastolic Dysfunction <br> (mild) <br> Normal LAP",
+            "B7-1": {
+              "title": "<div class='row'>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">E/e'</span></div>\
+                                </div>\
+                            </div>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Tricuspid Regurgitation</span></div>\
+                                </div>\
+                            </div>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">LA volume index</span></div>\
+                                </div>\
+                            </div>\
+                        </div>",
+              "options": {
+                  "I have information for <u>two</u> of these variables": "B7-2",
+                  "I have information for <u>three</u> of these variables": "B7"
+              }
+            },
+            "B7-2": {
+                "select": true,
+                "title": "(choose all applicable options)",
+                "options": [
+                    "Average E/e' > 14",
+                    "TR > 2,8 m/s",
+                    "LA volume index > 34 mL/m²",
+                ],
+                "none": function(){
+                    changeCards("B9")
+                    return
+                },
+                "next": function(){
+                    let selected = countSelected()
+
+                    if (selected == 1){
+                        changeCards("B4")
+                        return
+                    }
+
+                    changeCards("B10")
+                    return
+                }
+            },
+            "B7": {
+                "select": true,
+                "title": "(choose all applicable options)",
+                "options": [
+                    "Average E/e' > 14",
+                    "TR > 2,8 m/s",
+                    "LA volume index > 34 mL/m²",
+                ],
+                "none": function(){
+                    changeCards("B9")
+                    return
+                },
+                "next": function(){
+                    let selected = countSelected()
+
+                    if (selected == 1){
+                        changeCards("B9")
+                        return
+                    }
+
+                    changeCards("B10")
+                    return
+                }
+            },
+            "B8": "Grade III Diastolic Dysfunction <br> (severe) <br> ⇧ LAP",
+            "B9": "Grade I Diastolic Dysfunction <br> (mild) <br> Normal LAP",
+            "B10": "Grade II Diastolic Dysfunction <br> (moderate) <br> ⇧ LAP",
+            "B11": "<div class='row'>\
+                            <div class='col-md-12'>\
+                                <div class=\"text-white text-center mb-4\">\
+                                    <span>Indeterminate</span>\
+                                </div>\
+                                <div class=\"mb-4\">\
+                                    <button class='btn btn-primary' onclick=\"changeCards('B12')\">Try Diastolic Stress Testing</button>\
+                                </div>\
+                            </div>\
+                        </div>",
+            "B12": {
+                "select": true,
+                "title": "Diastolic Stress Testing",
+                "options": [
+                    "Average E/e' > 14 <br> or <br> Septal E/e' > 15",
+                    "Septal e' < 7 cm/s <br> and/or <br> Laretal e' < 10 cm/s",
+                    "TR > 2,8 cm/s"
+                ],
+                "none": function (){
+                    changeCards("B13")
+                    return
+                },
+                "next": function (){
+                    changeCards("B14")
+                    return
+                }
+            },
+            "B13": "Negative Diastolic Stress",
+            "B14": "Positive Diastolic Stress",
+            //LA Volume Calculated
+            "C1": {
+                "title": "<div class='row'>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Normal Left Ventricular Systolic Function</span></div>\
+                                </div>\
+                            </div>\
+                        </div>",
+                "options": {
+                    "YES": "C3",
+                    "NO": "B5",
+                }
+            },
+            "C2": {
+                "title": "<div class='row'>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Patient with Systemic Arterial Hypertension</span></div>\
+                                </div>\
+                            </div>\
+                        </div>",
+                "options": {
+                    "YES": "B5",
+                    "NO": "C1",
+                }
+            },
+            "C3": {
+                "title": "<div class='row'>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Pathological Left Ventricular Hyperthophy <br><br><span style='font-weight: normal'>and/or</span><br><br> Evident Segmental Contraction</span></div>\
+                                </div>\
+                            </div>\
+                        </div>",
+                "options": {
+                    "YES": "B5",
+                    "NO": "C4",
+                }
+            },
+            "C4": {
+                "title": "<div class='row'>\
+                            <div class='col-md-4'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Coronary Artery Disease without Evident Segmental Alteration <br><br><span style='font-weight: normal'>and/or</span><br><br> Hypertension without Left Ventricular Hypertrophy <br><br><span style='font-weight: normal'>and/or</span><br><br> Diabetes Mellitus <br><br><span style='font-weight: normal'>and/or</span><br><br> Obesity</span></div>\
+                                </div>\
+                            </div>\
+                        </div>",
+                "options": {
+                    "YES": "C5",
+                    "NO": "B1",
+                }
+            },
+            "C5": {
+                "select": true,
+                "title": "<div class='row'>\
+                            <div class='col-md-12 text-center'>\
+                                <div class=\"text-white mb-4\">\
+                                    <span>Evaluation of Longitudinal Systolic Function</span>\
+                                </div>\
+                                <div class=\"text-white\">\
+                                    <span>(choose all applicable options)</span>\
+                                </div>\
+                            </div>\
+                        </div>",
+                "options": [
+                    "GLS < 18",
+                    "MAPSE < 11",
+                    "Septal S' < 6",
+                ],
+                "none": function (){
+                    changeCards('C6')
+                },
+                "next": function (){
+                    changeCards('B5')
+                }
+            },
+            "C6": {
+                'title': '<div class=\'row\'>\
+                            <div class=\'col-md-4\'>\
+                                <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">HFpEF symptoms</span></div>\
+                                </div>\
+                            </div>\
+                        </div>',
+                'options': {
+                    'YES': 'B12',
+                    'NO': 'B1'
+                }
+            }
+        }
+
+        let card_header = `
+        <div class="card text-white bg-info mb-4" style="width: 100%">
+            <div class="card-body text-center" style="padding: 10px 0px">`
+        let card_footer = `
+            </div>
+        </div>
+        `
+        let card_select_header = `
+        <div class="card card-select text-white mb-4" data-cardSelect style="width: 100%">
+            <div class="card-section card-body text-center" style="padding: 10px 0px">`       
+        let card_select_footer =`
+            </div>
+            <button class="button" data-cardSelectButton></button>
+        </div>`
+
+        let go_back_button = `
+            <button class="btn btn-success" style="background-color: #e0ffe7;" onclick=changeCards("First")>
+                <img src="https://www.searchpng.com/wp-content/uploads/2019/02/Back-Arrow-Icon-PNG-1024x1024.png" width="20px">                
+            </button>`
+
+        let volume = 0
+        let nextButton = false
+
+        function create_card(options, select = false, step = false){
+            let cards = ''
+
+            if (select){
+                for(var option in options){
+                    let span = '<span class="font-weight-bold" style="font-size: 0.87rem">' + options[option] + '</span>'
+                    cards += card_select_header + span + card_select_footer
+                }
+                // adicionar none
+                cards += `<a href="#" onclick=steps["${step}"]["none"]()>`
+                span = '<span class="font-weight-bold" style="font-size: 0.87rem"> None </span>'
+                cards += card_header + span + card_footer
+                cards += '</a>'
+                let select_button = `
+                        <button class="btn btn-success mt-3 mb-5" style="width: 150px;" onclick=steps["${step}"]["next"]()>
+                            Next
+                        </button>
+                    `
+                return cards + select_button
+            }
+
+            for(var option in options){
+                cards += `<a href="#" onclick=changeCards("${options[option]}")>`
+                let span = '<span class="font-weight-bold" style="font-size: 0.87rem">' + option + '</span>'
+                cards += card_header + span + card_footer
+                cards += `</a>` 
+            }
+            return cards
+        }
+
+        function changeCards(step){
+            $('.cards').html('')
+            $('.title').html('')
+            $('.formCalculate').hide()
+            $('#nextButton').hide()
+            $('#calculate').show()
+
+            if (step === 'FORM') {
+                $('.title').html('LA volume index calculation')
+                nextButton = false
+                return HTMLCalculate()
+            }
+
+            if (step === 'FORM_NEXT') {
+                $('.title').html('LA volume index calculation')
+                nextButton = true
+                return HTMLCalculate()
+            }
+
+            if (typeof steps[step] == 'string'){
+                $('.cards').html(steps[step])
+                return
+            }
+            
+            var timeout = 0;
+
+            if (step !== 'First') {
+                //$('.loading').show()
+                timeout = 0
+            }else{
+                //Clear inputs when back to home
+                $('#weight').val('')
+                $('#height').val('')
+                $('#laVolume').val('')
+                $('#resultLAVol').html('')
+            }
+
+            setTimeout(function(){
+                //$('.loading').hide() 
+
+                if (steps[step]["title"]){
+                    $('.title').html(steps[step]["title"])
+                }
+
+                if (steps[step]["select"]){
+                    cards = create_card(steps[step]["options"], "select", step)
+                }else{
+                    cards = create_card(steps[step]["options"])
+                }
+
+                $('.cards').html(cards)
+
+                $('.back-button').html(step != 'First' ? go_back_button : '')
+            
+                $('[data-cardSelectButton]').click(function() {
+                    $(this).parent('[data-cardSelect]').toggleClass('is-selected');
+                });
+            }, timeout);
+        }
+
+        function changeCardsSelect(){
+            let cards = ''
+            for(var option in options){
+                let span = '<span class="font-weight-bold" style="font-size: 0.87rem">' + option + '</span>'
+                cards += card_header + span + card_footer
+            }
+        }
+
+        function countSelected(){
+            return $('.is-selected').length
+        }
+
+        function HTMLCalculate(){
+            $(".formCalculate").show()
+
+            $("#calculate").click(function (){
+                let weight = $("#weight").val().replace(",", ".")
+                let height = $("#height").val().replace(",", ".")
+                let laVol = $("#laVolume").val().replace(",", ".")
+
+                volume = (laVol / (0.007184 * (Math.pow(height, 0.725)) * (Math.pow(weight, 0.425)))).toFixed(4)
+
+                if (!parseFloat(volume)) return alert("Não foi possível calcular. Confira se tem apenas números.")
+
+                $("#calculate").hide()
+                $("#resultLAVol").html(`LA volume index = ${volume} mL/m²`)
+                $("#nextButton").show()
+
+                if (!nextButton) {
+
+                    if (volume < 34) {
+                        $("#nextButton").click(function (){
+                            changeCards('C1')
+                        })
+                    }
+
+                    if (volume > 34) {
+                        $("#nextButton").click(function (){
+                            changeCards('C2')
+                        })
+                    }
+
+                    return 0
+                }
+
+                $("#nextButton").click(function (){
+                    return changeCards('A1')
+                })
+            })
+        }
+
+        var cards = changeCards('First')
+
+        $('.cards').html(cards)
+    </script>
+  </body>
+</html>
