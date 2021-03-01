@@ -159,7 +159,7 @@
             "A2": "Normal Diastolic Function",
             "A3": "<ul> <li>Normal Diastolic Function</li><li>Athlete's Heart</li><li>Constriction</li> </ul>",
             "A4": {
-                "title": "(choose one option)",
+                "title": "(Choose the option with the highest number of positive items for the patient)",
                 "options": {
                     "E/A < 0,8 <br> DT > 200 ms <br> Average E/e' ≤ 8 <br> Ar-A < 0 ms <br> Valsalva: E/A decrease < 0,5": "A5",
                     "E/A 0,8 - 1,5 <br> DT 160 -  200 ms <br> Average E/e' 9 - 12 <br> Ar-A ≥ 30 ms <br> Valsalva: E/A decrease ≥ 0,5": "A6",
@@ -205,7 +205,7 @@
                     <div class=\"card text-white bg-info mt-2 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
                         <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
                             <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
-                                <ul>\
+                                <ul style='padding: 10px 30px;'>\
                                     <li>Reducted Septal e' with Normal Diastolic Function</li>\
                                     <ul>\
                                         <li>Wrong local sample volume</li>\
@@ -220,7 +220,7 @@
                     <div class=\"card text-white bg-info mt-3 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
                         <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
                             <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
-                                <ul>\
+                                <ul style='padding: 10px 30px;'>\
                                     <li>Increased LA volume index with Normal Diastolic Function</li>\
                                     <ul>\
                                         <li>Anemia</li>\
@@ -235,7 +235,20 @@
                     </div>",
             "B3": {
                 "select": true,
-                "title": "(choose all applicable options)",
+                "title": "<div class=\"card text-white bg-info mt-2 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
+                        <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
+                            <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
+                                <ul style='padding: 10px 30px;'>\
+                                    <li>New parameters:</li>\
+                                    <ul style='padding: 10px 30px;'>\
+                                       <li>Atrail strain < 20 - 23 %</li>\
+                                       <li>LA volume index/a' > 3,65</li>\
+                                    </ul>\
+                                </ul>\
+                            </span>\
+                        </div>\
+                    </div>\
+                    <br> (choose all applicable options)",
                 "options": [
                     "Valsalva: E/A decrease > 50%",
                     "L Wave > 20 cm/s",
@@ -267,7 +280,10 @@
                     "E/A ≥ 2": "B8"
                 }
             },
-            "B6": "Grade I Diastolic Dysfunction <br> (mild) <br> Normal LAP",
+            "B6": "Grade I Diastolic Dysfunction <br> (mild) <br> Normal LAP <br><br> If HFpEF symptoms:\
+                    <div class=\"m-3\">\
+                        <button class='btn btn-primary' onclick=\"changeCards('B12')\">Try Diastolic Stress Testing</button>\
+                    </div>",
             "B7-1": {
               "title": "<div class='row'>\
                             <div class='col-md-4'>\
@@ -357,7 +373,7 @@
                 "title": "Diastolic Stress Testing",
                 "options": [
                     "Average E/e' > 14 <br> or <br> Septal E/e' > 15",
-                    "Septal e' < 7 cm/s <br> and/or <br> Laretal e' < 10 cm/s",
+                    "Septal e' < 7 cm/s <br> and/or <br> Lateral e' < 10 cm/s",
                     "TR > 2,8 cm/s"
                 ],
                 "none": function (){
@@ -365,11 +381,23 @@
                     return
                 },
                 "next": function (){
-                    changeCards("B14")
+                    changeCards("B5")
                     return
                 }
             },
-            "B13": "Negative Diastolic Stress",
+            "B13": "Negative Diastolic Stress <br>\
+                   <div class=\"card text-white bg-info mt-2 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
+                        <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
+                            <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
+                                Observations in this case:\
+                                <ul style='padding: 10px 30px;'>\
+                                    <li>New abnormalities in segmental contractility</li>\
+                                    <li>LVOT dynamic obstruction</li>\
+                                    <li>Dynamic mitral regurgitation</li>\
+                                </ul>\
+                            </span>\
+                        </div>\
+                    </div>",
             "B14": "Positive Diastolic Stress",
             //LA Volume Calculated
             "C1": {
@@ -389,8 +417,24 @@
                 "title": "<div class='row'>\
                             <div class='col-md-4'>\
                                 <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
-                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Patient with Systemic Arterial Hypertension</span></div>\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Significant Systemic Arterial Hypertension without other evident cause for LA enlargement*</span></div>\
                                 </div>\
+                            </div>\
+                        </div>\
+                        <div class=\"card text-white bg-info mt-2 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
+                            <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
+                                <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
+                                    *Other evident causes:\
+                                    <ul style='padding: 10px 30px;'>\
+                                        <li>LA remodeling due to atrial fibrillation or other atrial arrhythmias</li>\
+                                        <li>Significant valvopathies</li>\
+                                        <li>Hypertrophic and restrictive cardiomyopathy</li>\
+                                        <li>Cardiac transplant</li>\
+                                        <li>Pacemaker</li>\
+                                        <li>AV block</li>\
+                                        <li>Pulmonary hypertension</li>\
+                                    </ul>\
+                                </span>\
                             </div>\
                         </div>",
                 "options": {
@@ -402,7 +446,7 @@
                 "title": "<div class='row'>\
                             <div class='col-md-4'>\
                                 <div class=\"card text-white mb-4\" style=\"background: lightslategray;width: 100%\">\
-                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Pathological Left Ventricular Hyperthophy <br><br><span style='font-weight: normal'>and/or</span><br><br> Evident Segmental Contraction</span></div>\
+                                    <div class=\"card-body text-center\" style=\"padding: 10px 0px\"><span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">Pathological Left Ventricular Hyperthophy <br><br><span style='font-weight: normal'>and/or</span><br><br> Evident Alteration in Segmental Contractility</span></div>\
                                 </div>\
                             </div>\
                         </div>",
@@ -437,7 +481,7 @@
                             </div>\
                         </div>",
                 "options": [
-                    "GLS < 18",
+                    "GLS < 17 or 18",
                     "MAPSE < 11",
                     "Septal S' < 6",
                 ],
@@ -445,7 +489,7 @@
                     changeCards('C6')
                 },
                 "next": function (){
-                    changeCards('B5')
+                    changeCards('C7')
                 }
             },
             "C6": {
@@ -460,7 +504,18 @@
                     'YES': 'B12',
                     'NO': 'B1'
                 }
-            }
+            },
+            "C7": "<div class=\"card text-white bg-info mt-2 mb-3\" style=\"width: 100%; background-color:#06131d !important;\">\
+                        <div class=\"card-body text-center\" style=\"padding: 10px 0px\">\
+                            <span class=\"font-weight-bold\" style=\"font-size: 0.87rem\">\
+                                MAPSE and S':<br><br>\
+                                These parameters alone may not be equivalent to systolic dysfunction. To proceed with the graduation of diastolic dysfunction, there must be individualized medical evaluation.\
+                            </span>\
+                        </div>\
+                    </div>\
+                    <div class=\"mb-4\">\
+                        <button class='btn btn-primary' onclick=\"changeCards('C5')\">Proceed</button>\
+                    </div>",
         }
 
         let card_header = `
